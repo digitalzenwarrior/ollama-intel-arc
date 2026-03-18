@@ -1,5 +1,10 @@
 ARG OLLAMA_VERSION=0.18.0
 ARG GGML_COMMIT=15bff84bf56651d6f991f166a2bf0f362996f7f9
+ARG COMPUTE_RUNTIME_VERSION=26.05.37020.3
+ARG LEVEL_ZERO_VERSION=1.28.0
+ARG IGC_VERSION=2.28.4
+ARG IGC_BUILD=20760
+ARG GMM_VERSION=22.9.0
 
 # =============================================================================
 # Stage 1: Build ggml-sycl backend from ollama's ggml source using Intel oneAPI
@@ -76,6 +81,11 @@ FROM ubuntu:24.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 ARG OLLAMA_VERSION
+ARG COMPUTE_RUNTIME_VERSION
+ARG LEVEL_ZERO_VERSION
+ARG IGC_VERSION
+ARG IGC_BUILD
+ARG GMM_VERSION
 
 # Base packages
 RUN apt-get update && \
@@ -89,15 +99,15 @@ RUN apt-get update && \
 
 # Intel GPU runtimes (release 26.05.37020.3)
 # Provides level-zero, IGC, compute-runtime for Intel GPU kernel support
-RUN mkdir -p /tmp/gpu && cd /tmp/gpu && \
-  wget https://github.com/oneapi-src/level-zero/releases/download/v1.28.0/level-zero_1.28.0+u24.04_amd64.deb && \
-  wget https://github.com/intel/intel-graphics-compiler/releases/download/v2.28.4/intel-igc-core-2_2.28.4+20760_amd64.deb && \
-  wget https://github.com/intel/intel-graphics-compiler/releases/download/v2.28.4/intel-igc-opencl-2_2.28.4+20760_amd64.deb && \
-  wget https://github.com/intel/compute-runtime/releases/download/26.05.37020.3/intel-ocloc_26.05.37020.3-0_amd64.deb && \
-  wget https://github.com/intel/compute-runtime/releases/download/26.05.37020.3/intel-opencl-icd_26.05.37020.3-0_amd64.deb && \
-  wget https://github.com/intel/compute-runtime/releases/download/26.05.37020.3/libigdgmm12_22.9.0_amd64.deb && \
-  wget https://github.com/intel/compute-runtime/releases/download/26.05.37020.3/libze-intel-gpu1_26.05.37020.3-0_amd64.deb && \
-  dpkg -i *.deb && rm -rf /tmp/gpu
+  RUN mkdir -p /tmp/gpu && cd /tmp/gpu && \
+    wget https://github.com/oneapi-src/level-zero/releases/download/v${LEVEL_ZERO_VERSION}/level-zero_${LEVEL_ZERO_VERSION}+u24.04_amd64.deb && \
+    wget https://github.com/intel/intel-graphics-compiler/releases/download/v${IGC_VERSION}/intel-igc-core-2_${IGC_VERSION}+${IGC_BUILD}_amd64.deb && \
+    wget https://github.com/intel/intel-graphics-compiler/releases/download/v${IGC_VERSION}/intel-igc-opencl-2_${IGC_VERSION}+${IGC_BUILD}_amd64.deb && \
+    wget https://github.com/intel/compute-runtime/releases/download/${COMPUTE_RUNTIME_VERSION}/intel-ocloc_${COMPUTE_RUNTIME_VERSION}-0_amd64.deb && \
+    wget https://github.com/intel/compute-runtime/releases/download/${COMPUTE_RUNTIME_VERSION}/intel-opencl-icd_${COMPUTE_RUNTIME_VERSION}-0_amd64.deb && \
+    wget https://github.com/intel/compute-runtime/releases/download/${COMPUTE_RUNTIME_VERSION}/libigdgmm12_${GMM_VERSION}_amd64.deb && \
+    wget https://github.com/intel/compute-runtime/releases/download/${COMPUTE_RUNTIME_VERSION}/libze-intel-gpu1_${COMPUTE_RUNTIME_VERSION}-0_amd64.deb && \
+    dpkg -i *.deb && rm -rf /tmp/gpu
 
 # Install official ollama binary + CPU runners (skip CUDA/MLX/Vulkan)
 RUN wget -qO- "https://github.com/ollama/ollama/releases/download/v${OLLAMA_VERSION}/ollama-linux-amd64.tar.zst" | \

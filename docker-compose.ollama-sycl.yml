@@ -44,6 +44,7 @@ services:
       - WEBUI_AUTH=False
       - ENABLE_OPENAI_API=False
       - ENABLE_OLLAMA_API=True
+      - OLLAMA_BASE_URL=http://ollama-sycl:11434
       - ENABLE_IMAGE_GENERATION=True
       - IMAGE_GENERATION_ENGINE=automatic1111
       - IMAGE_GENERATION_MODEL=dreamshaper_8
