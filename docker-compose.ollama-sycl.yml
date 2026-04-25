@@ -21,21 +21,14 @@ services:
       - SYCL_CACHE_PERSISTENT=1
       - SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS=1
       - UR_L0_USE_IMMEDIATE_COMMANDLISTS=1
-
-      # Pass-through from .env — values match recommendation
-      - OLLAMA_KEEP_ALIVE
-      - OLLAMA_CONTEXT_LENGTH
-      - OLLAMA_MAX_VRAM
-      - OLLAMA_NUM_PARALLEL
-      - OLLAMA_MAX_LOADED_MODELS
-      - OLLAMA_MAX_QUEUE
-      - OLLAMA_DEBUG
-      - OLLAMA_FLASH_ATTENTION
-      - OLLAMA_KV_CACHE_TYPE
-      - OLLAMA_GPU_OVERHEAD
-      - OLLAMA_NUM_GPU
-      - GGML_SYCL_DEBUG
-      - GGML_SYCL_F16
+      - OLLAMA_KEEP_ALIVE=5m
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+      - OLLAMA_CONTEXT_LENGTH=16384
+      - OLLAMA_KV_CACHE_TYPE=q4_0
+      - GGML_SYCL_F16=1
+      - ClDeviceGlobalMemSizeAvailablePercent=100
+      - OLLAMA_INTEL_GPU=true
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
@@ -47,7 +40,6 @@ services:
     ports:
       - 4040:8080
     environment:
-      - WEBUI_AUTH=False
       - ENABLE_OPENAI_API=False
       - ENABLE_OLLAMA_API=True
       - OLLAMA_BASE_URL=http://ollama-sycl:11434
@@ -60,6 +52,21 @@ services:
       - AUTOMATIC1111_CFG_SCALE=2
       - AUTOMATIC1111_SAMPLER=DPM++ SDE
       - AUTOMATIC1111_SCHEDULER=Karras
+      - ENABLE_MEMORIES=true
+      - ENABLE_RAG_HYBRID_SEARCH=true
+      - RAG_EMBEDDING_ENGINE=ollama
+      - RAG_EMBEDDING_MODEL=nomic-embed-text
+      - RAG_TOP_K=5
+      - RAG_CONTEXT_LENGTH=2048
+      #  Betere document chunking voor lange teksten
+      - RAG_CHUNK_SIZE=512
+      - RAG_CHUNK_OVERLAP=128
+      #  Voorkom dat enorme uploads je server vertragen
+      - MAX_FILE_SIZE_MB=100
+      #  Betere realtime streaming (vooral bij langere antwoorden)
+      - ENABLE_WEBSOCKET_SUPPORT=true
+      #  Cache embeddings voor snellere herhaalde queries
+      - RAG_EMBEDDING_CACHE=true
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
