@@ -12,7 +12,7 @@ services:
       - ollama-volume:/root/.ollama
       - sycl-cache-volume:/root/.cache
     ports:
-      - 11434:11434
+      - 11432:11434
     environment:
       - no_proxy=localhost,127.0.0.1,ollama-sycl
       - NO_PROXY=localhost,127.0.0.1,ollama-sycl
