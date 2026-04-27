@@ -29,6 +29,7 @@ services:
       - GGML_SYCL_F16=1
       - ClDeviceGlobalMemSizeAvailablePercent=100
       - OLLAMA_INTEL_GPU=true
+      - RAG_SYSTEM_CONTEXT=True
 
   open-webui:
     image: ghcr.io/open-webui/open-webui:latest
