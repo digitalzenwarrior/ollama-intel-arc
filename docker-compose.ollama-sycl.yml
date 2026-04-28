@@ -28,7 +28,7 @@ services:
       - OLLAMA_KEEP_ALIVE=5m
       - OLLAMA_HOST=0.0.0.0
       - OLLAMA_ORIGINS=*
-      - OLLAMA_CONTEXT_LENGTH=4096
+      - OLLAMA_CONTEXT_LENGTH=8192
       - OLLAMA_KV_CACHE_TYPE=q4_0
       - GGML_SYCL_F16=1
       - ClDeviceGlobalMemSizeAvailablePercent=100
@@ -66,8 +66,8 @@ services:
       - ENABLE_RAG_HYBRID_SEARCH=true
       - RAG_EMBEDDING_ENGINE=ollama
       - RAG_EMBEDDING_MODEL=nomic-embed-text
-      - RAG_TOP_K=5
-      - RAG_CONTEXT_LENGTH=2048
+      - RAG_TOP_K=10
+      - RAG_CONTEXT_LENGTH=8192
       #  Betere document chunking voor lange teksten
       - RAG_CHUNK_SIZE=512
       - RAG_CHUNK_OVERLAP=128
