@@ -49,6 +49,7 @@ services:
         soft: 65536
         hard: 65536
     environment:
+      - TZ=Europe/Brussels
       - ENABLE_OPENAI_API=False
       - ENABLE_OLLAMA_API=True
       - OLLAMA_BASE_URL=http://ollama-sycl:11434
