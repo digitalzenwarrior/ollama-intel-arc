@@ -12,7 +12,7 @@ services:
       - ollama-volume:/root/.ollama
       - sycl-cache-volume:/root/.cache
     ports:
-      - 11434:11434
+      - 11432:11434
     environment:
       - no_proxy=localhost,127.0.0.1,ollama-sycl
       - NO_PROXY=localhost,127.0.0.1,ollama-sycl
@@ -21,6 +21,11 @@ services:
       - SYCL_CACHE_PERSISTENT=1
       - SYCL_PI_LEVEL_ZERO_USE_IMMEDIATE_COMMANDLISTS=1
       - UR_L0_USE_IMMEDIATE_COMMANDLISTS=1
+      - OLLAMA_HOST=0.0.0.0
+      - OLLAMA_ORIGINS=*
+      - ClDeviceGlobalMemSizeAvailablePercent=100
+      - OLLAMA_INTEL_GPU=true
+      - RAG_SYSTEM_CONTEXT=True
 
       # Pass-through from .env — values match recommendation
       - OLLAMA_KEEP_ALIVE
@@ -60,6 +65,21 @@ services:
       - AUTOMATIC1111_CFG_SCALE=2
       - AUTOMATIC1111_SAMPLER=DPM++ SDE
       - AUTOMATIC1111_SCHEDULER=Karras
+      - ENABLE_MEMORIES=true
+      - ENABLE_RAG_HYBRID_SEARCH=true
+      - RAG_EMBEDDING_ENGINE=ollama
+      - RAG_EMBEDDING_MODEL=nomic-embed-text
+      - RAG_TOP_K=7
+      - RAG_CONTEXT_LENGTH=4092
+      #  Betere document chunking voor lange teksten
+      - RAG_CHUNK_SIZE=512
+      - RAG_CHUNK_OVERLAP=128
+      #  Voorkom dat enorme uploads je server vertragen
+      - MAX_FILE_SIZE_MB=100
+      #  Betere realtime streaming (vooral bij langere antwoorden)
+      - ENABLE_WEBSOCKET_SUPPORT=true
+      #  Cache embeddings voor snellere herhaalde queries
+      - RAG_EMBEDDING_CACHE=true
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
