@@ -11,6 +11,8 @@ services:
     volumes:
       - ollama-volume:/root/.ollama
       - sycl-cache-volume:/root/.cache
+      - /dev/dri/renderD129:/dev/dri/renderD129
+      - /dev/dri/renderD130:/dev/dri/renderD130
     ports:
       - 11432:11434
     environment:
