@@ -15,12 +15,23 @@ services:
       - DEBUG=true # Laat dit aan staan tot we bevestigd hebben dat Vulkan actief is
       - MODELS_PATH=/build/models
       
-      # --- VULKAN & GPU OPTIMISATIES ---
-      # Forceer llama.cpp (tekst) om Vulkan te gebruiken
+  # --- VULKAN & GPU (De basis) ---
+      - VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/intel_icd.x86_64.json
       - LLAMACPP_VULKAN=1
-      # Forceer stable-diffusion.cpp (beeld) om Vulkan te gebruiken
       - STABLE_DIFFUSION_BACKEND=stablediffusion-cpp
       - STABLE_DIFFUSION_VULKAN=1
+      
+      # --- GLOBALE LLAMA.CPP CONFIGURATIE ---
+      # Deze regels gelden nu voor ELK tekstmodel dat je laadt:
+      - LLAMACPP_N_GPU_LAYERS=-1       # Laad ALTIJD alle lagen naar de GPU (geen CPU offload)
+      - LLAMACPP_CONTEXT_SIZE=4096     # Standaard contextgrootte (veilig voor 16GB VRAM)
+      - LLAMACPP_MMAP=true             # Geheugen-mappen voor efficiëntie
+      - LLAMACPP_BATCH_SIZE=512        # Optimaliseert de verwerkingssnelheid
+      
+      # --- INTEL ARC SPECIFIEK ---
+      - ZES_ENABLE_SYSMAN=1
+      - OverrideGpuAddressSpace=48
+      - ClDeviceGlobalMemSizeAvailablePercent=100
       
       # --- GEHEUGENBEHEER (Cruciaal voor 16GB VRAM) ---
       # Zorg dat de container niet zomaar al het systeemgeheugen opslokt
