@@ -1,0 +1,26 @@
+services:
+  localai:
+    image: localai/localai:latest
+    container_name: localai
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    devices:
+      - /dev/dri:/dev/dri # Directe toegang tot je Intel Arc (en toekomstige Strix iGPU/NPU)
+    volumes:
+      - ./models:/build/models
+      - ./config:/build/models # YAML configuraties
+    environment:
+      - DEBUG=true # Laat dit aan staan tot we bevestigd hebben dat Vulkan actief is
+      - MODELS_PATH=/build/models
+      
+      # --- VULKAN & GPU OPTIMISATIES ---
+      # Forceer llama.cpp (tekst) om Vulkan te gebruiken
+      - LLAMACPP_VULKAN=1
+      # Forceer stable-diffusion.cpp (beeld) om Vulkan te gebruiken
+      - STABLE_DIFFUSION_BACKEND=stablediffusion-cpp
+      - STABLE_DIFFUSION_VULKAN=1
+      
+      # --- GEHEUGENBEHEER (Cruciaal voor 16GB VRAM) ---
+      # Zorg dat de container niet zomaar al het systeemgeheugen opslokt
+      - THREADS=4 # Beperk CPU threads voor pre/post-processing, houd de focus op de GPU
