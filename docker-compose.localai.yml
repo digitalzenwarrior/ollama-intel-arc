@@ -9,8 +9,10 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/renderD129:/dev/dri/renderD129
     volumes:
-      - ./models:/build/models
-      - ./config:/build/models # YAML configuraties
+      - ./backends:/backends       # Waar LocalAI de C++ engines (llama.cpp, sd.cpp) opslaat
+      - ./configuration:/configuration # Interne LocalAI configuraties en galleries
+      - ./data:/data               # Vector databases, uploads, en RAG data (cruciaal voor later!)
+      - ./models:/models
     environment:
       - DEBUG=true # Laat dit aan staan tot we bevestigd hebben dat Vulkan actief is
       - MODELS_PATH=/build/models
