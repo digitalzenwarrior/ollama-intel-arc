@@ -6,7 +6,8 @@ services:
     ports:
       - "8080:8080"
     devices:
-      - /dev/dri:/dev/dri # Directe toegang tot je Intel Arc (en toekomstige Strix iGPU/NPU)
+      - /dev/dri/renderD128:/dev/dri/renderD128
+      - /dev/dri/renderD129:/dev/dri/renderD129
     volumes:
       - ./models:/build/models
       - ./config:/build/models # YAML configuraties
