@@ -16,7 +16,6 @@ services:
       - MODELS_PATH=/build/models
       
   # --- VULKAN & GPU (De basis) ---
-      - VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/intel_icd.x86_64.json
       - LLAMACPP_VULKAN=1
       - STABLE_DIFFUSION_BACKEND=stablediffusion-cpp
       - STABLE_DIFFUSION_VULKAN=1
