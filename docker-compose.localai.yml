@@ -1,6 +1,6 @@
 services:
   localai:
-    image: localai/localai:latest
+    image: localai/localai:latest-gpu-vulkan
     container_name: localai
     restart: unless-stopped
     ports:
