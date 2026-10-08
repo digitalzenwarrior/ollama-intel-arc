@@ -6,7 +6,6 @@ services:
     ports:
       - "8080:8080"
     devices:
-      - /dev/dri/renderD127:/dev/dri/renderD127
       - /dev/dri/renderD128:/dev/dri/renderD128
       - /dev/dri/renderD129:/dev/dri/renderD129
       - /dev/dri/renderD130:/dev/dri/renderD130
